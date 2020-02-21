@@ -8,7 +8,7 @@
 
 
 ```js
-npm install react-native-instagram-login --save
+npm install react-native-instagram-login@1.1.2 --save
 ```
 ### IMPORTANT NOTES:
 `react-native-instagram-login` version 2 switches to the Instagram Graph API.
