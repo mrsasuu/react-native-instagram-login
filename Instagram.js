@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -58,9 +57,11 @@ export default class Instagram extends Component {
         this.props.onLoginSuccess(results.access_token, results)
       } else if (results.code) {
 
-        //Fetching to get token with appId, appSecret and code
+
+        //Fetching to get token with appId, appSecret and code        
         let { code } = results
         code = code.split('#_').join('')
+    
         const { appId, appSecret, redirectUrl, scopes } = this.props
         let headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
         let http = axios.create({ baseURL: 'https://api.instagram.com/oauth/access_token',  headers: headers  })
@@ -70,16 +71,32 @@ export default class Instagram extends Component {
         form.append( 'grant_type', 'authorization_code' );
         form.append( 'redirect_uri', redirectUrl );
         form.append( 'code', code );
-        let res = await http.post( '/', form ).catch( (error) => { console.log( error.response ); return false })
 
-        if( res )
-        {
-          this.props.onLoginSuccess(res.data, results);
+        //If its required to carry all the authentication process by the client responsetype prop would be == 'token' if not we would receive the auth code to send it to our backend in order to complete the auth procedure protecting the app_secret token (good practices)
+        if(this.props.responseType == 'token'){
+          if(this.props.appSecret){
+            let res = await http.post( '/', form ).catch( (error) => { console.log( error.response ); return false })
+          
+            if( res )
+            {
+              this.props.onLoginSuccess(res.data, results);
+            }
+            else
+            {
+              this.props.onLoginFailure(results);
+            }
+          }else{
+            this.props.onLoginFailure("app_secret should be specify in order to get user's access_token (bad practise)");
+          }
+          
+        }else{
+          if(code){
+            this.props.onLoginSuccess(code, code);
+          }else{
+            this.props.onLoginFailure(results);
+          }
         }
-        else
-        {
-          this.props.onLoginFailure(results)
-        }
+        
 
 
       } else {
@@ -121,7 +138,7 @@ export default class Instagram extends Component {
     const { appId, appSecret, redirectUrl, scopes, responseType } = this.props
     const { key } = this.state
 
-    let ig_uri = `https://api.instagram.com/oauth/authorize/?app_id=${appId}&app_secret=${appSecret}&redirect_uri=${redirectUrl}&response_type=${responseType}&scope=${scopes.join(',')}`
+    let ig_uri = `https://api.instagram.com/oauth/authorize?app_id=${appId}&redirect_uri=${redirectUrl}&response_type=code&scope=${scopes.join(',')}`
 
     return (
       <WebView
@@ -241,3 +258,4 @@ const styles = StyleSheet.create({
     height: 30,
   }
 })
+

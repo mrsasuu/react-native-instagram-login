@@ -8,12 +8,19 @@
 
 
 ```js
-npm install react-native-instagram-login@1.1.2 --save
+npm install https://github.com/mrsasuu/react-native-instagram-login --save
 ```
 ### IMPORTANT NOTES:
-`react-native-instagram-login` version 2 switches to the Instagram Graph API.
+`mrsasuu/react-native-instagram-login` version 2 switches to the Instagram Graph API.
 
 If you want to use old version 1, [please read docs](https://github.com/hungdev/react-native-instagram-login/tree/v1)
+
+### IMPORTANT NOTES 2:
+
+It is recommended to request and exchange the user's access_token in your back server in order to not store the app_secret key in the app.
+
+To do that, change the "responseType" to code and in your backend server complete the authentication process as is explained here (step 2):
+https://developers.facebook.com/docs/instagram-basic-display-api/guides/getting-access-tokens-and-permissions/
 
 ## Install
 
@@ -85,8 +92,8 @@ setIgToken = async (data) => {
 | Property       | Type             | Description                                |
 | -------------- | ---------------- | ------------------------------------------ |
 | appId          | PropTypes.string | Instagram App_id                           |
-| appSecret      | PropTypes.string | Instagram App_secret                       |
-| responseType   | PropTypes.string | 'code' or 'token', default 'token'         |
+| appSecret      | PropTypes.string | Instagram App_secret (optional if responseType == 'code')                      |
+| responseType   | PropTypes.string | 'code' or 'token', default 'token' (bad practise)       |
 | scopes         | PropTypes.array  | Login Permissions                          |
 | redirectUrl    | PropTypes.string | Your redirectUrl                           |
 | onLoginSuccess | PropTypes.func   | Function will be call back on success      |
