@@ -25,7 +25,7 @@ https://developers.facebook.com/docs/instagram-basic-display-api/guides/getting-
 ## Install
 
 ```js
-npm install react-native-instagram-login react-native-webview --save
+npm install https://github.com/mrsasuu/react-native-instagram-login react-native-webview --save
 ```
 
 After that run:
